@@ -1,8 +1,8 @@
 package com.mercu.demo240719.user;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByName(String name);
+    void deleteByName(String name);
 }

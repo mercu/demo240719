@@ -9,14 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
-public class UserRepositoryTest {
+public class UserServiceTest {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Test
     public void bean() {
-        log.info("userRepository : {}", userRepository);
-        assertNotNull(userRepository);
+        log.info("userService : {}", userService);
+        assertNotNull(userService);
     }
 
     @Test
@@ -27,29 +27,29 @@ public class UserRepositoryTest {
                 .password("testpw")
                 .build();
 
-        user = userRepository.save(user);
+        userService.create(user);
 
         // read
-        User dbUser = userRepository.findById(user.getSeq()).get();
+        User dbUser = userService.findByName("tester");
         log.info("dbUser: {}", dbUser);
         assertNotNull(dbUser);
 
         // update
         dbUser = User.builder()
-                .seq(user.getSeq())
-                .name("updateUser")
+                .seq(dbUser.getSeq())
+                .name(dbUser.getName())
                 .password("updatePw")
                 .build();
-        userRepository.save(dbUser);
+        userService. modify(dbUser);
 
         // read
-        User updateUser = userRepository.findById(user.getSeq()).get();
+        User updateUser = userService.findByName("tester");
         log.info("updateUser: {}", updateUser);
         assertNotNull(updateUser);
-        assertEquals("updateUser", updateUser.getName());
+        assertEquals("updatePw", updateUser.getPassword());
 
         // delete
-        userRepository.deleteById(user.getSeq());
-        assertTrue(userRepository.findById(user.getSeq()).isEmpty());
+        userService.removeByName("tester");
+        assertNull(userService.findByName("tester"));
     }
 }

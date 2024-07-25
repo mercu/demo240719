@@ -1,0 +1,33 @@
+
+### authentication(login) api
+### - req : id/pw
+### - res : access-token, refresh-token
+GET http://localhost:8081/jwt/authenticate?username=u1111&password=abcde
+
+// {"access-token":"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1MTExMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MjA2NjA0ODQsImV4cCI6MTcyMTI2MDQ4NH0.WvJQOOYJPoK2KglGlSWUxDmrCJ-Jht-j5hxosCA3_6I","refresh-token":"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1MTExMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MjA2NjA0ODQsImV4cCI6MTgwNzA2MDQ4NH0.PseOmRiuj10gCWYJrOjtGxqWKSyhXRqKhITRFmcpruI"}
+
+### use service api /w access-token
+### - (req - header) Authorization: Bearer {access-token}
+### - (res - success) 200 ..
+### - (res - expired) 403 - "access-token expired"
+GET http://localhost:8081/content/all
+accept: */*
+// Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1MTExMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MjA2Njc4MzEsImV4cCI6MTcyMTI2NzgzMX0.nMz1HXtfzyF1QXiAc23EAprJBwtPZE5uIuw_aJPl1qo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1MTExMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MjA2Njc0NDIsImV4cCI6MTcyMTI2NzQ0Mn0.oumfQ5H241jepe_s0GPcBhe3i2kJkEtVEq7tOgOssEQ
+
+### use service api /w invalid access-token => error
+### - (req - header) Authorization: Bearer {access-token}
+### - (res - success) 200 ..
+### - (res - expired) 403 - "access-token expired"
+GET http://localhost:8081/content/all
+accept: */*
+Authorization: Bearer sadasdasasd
+
+### new access-token by refresh-token
+### - req : refresh-token
+### - res : access-token (new)
+GET http://localhost:8081/jwt/refresh?refresh-token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1MTExMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MjA2Njc4MDMsImV4cCI6MTgwNzA2NzgwM30.2dpc5iu7L44GZOiJIX-Dn4a3OEt9BJ50kuUSGu97gvA
+
+### logout api
+### (remove refresh-token)
+GET http://localhost:8081/jwt/logout?username=u1111

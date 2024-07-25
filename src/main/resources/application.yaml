@@ -18,3 +18,8 @@ spring:
     generate-ddl: true
     open-in-view: false
     show_sql: true
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
